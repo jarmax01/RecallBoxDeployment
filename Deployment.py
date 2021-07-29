@@ -5,7 +5,6 @@ import shutil
 import patoolib
 import time
 
-
 def unZipFile(target, path):
     zipFile = zip.ZipFile(target)
     zipFile.extractall(path)
@@ -25,24 +24,34 @@ def moveFile(name, path1, path2):
 
 sdCard = ""
 saveRar = ""
+saveRarFileName = ""
+currentFolder = os.getcwd()
 
-with open("C:\\Users\\Dell\\Desktop\\runner\\config.txt", encoding='utf8') as f:
+with open((currentFolder + "\\config.txt"), encoding='utf8') as f:
     lineNumber = 0
     for line in f:
         lineNumber += 1
         if lineNumber == 1:
             sdCard = line.strip()
         elif lineNumber == 2:
-            saveRar = line.strip()
+            saveRarFileName = line.strip()
+            saveRar = (currentFolder + "\\" + saveRarFileName)
     f.close()
+
+print("")
 print("Le système de stockage " + sdCard + " va être former en FAT32")
 print("Le fichier " + saveRar + " va ensuite être copier dedans")
+
 d1 = input("Clickez sur Y pour lancer le processus et N pour stopper le programme: ")
 
 if d1 == "Y":
-    os.system("format /FS:FAT32 D:")
-    moveFile("save.rar", "C:\\Users\\Dell\\Desktop\\", "D:\\")
+    os.system("format /FS:FAT32 "+ sdCard[0:2])
+    moveFile(saveRarFileName, currentFolder, sdCard)
     time.sleep(10)
-    unRarFile("D:\\save.rar", "D:\\")
+    unRarFile((sdCard + saveRarFileName), sdCard)
 elif d1 == "N":
+    print("")
+    print("Pour modifier les informations accéder au fichier " + (currentFolder + "\\config.txt"))
+    print("A bientot !")
+    time.sleep(5)
     pass
